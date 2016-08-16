@@ -11,7 +11,7 @@ def multieq(obj1, obj2, *attrs):
     return type(obj1) == type(obj2) and all(getattr(obj1, attr) == getattr(obj2, attr) for attr in attrs)
 
 
-def multihash(obj, *attrs):
+def multihash(*attrs):
     """Generate a hash of the object using the provided attributes.
 
     31 is a "magic number"; it's the same magic number used by Java
@@ -19,7 +19,7 @@ def multihash(obj, *attrs):
     """
     result = 1
     for attr in attrs:
-        result = 31 * result + hash(getattr(obj, attr))
+        result = 31 * result + hash(attr)
     return result
 
 
@@ -267,7 +267,7 @@ class Classref(Constant):
         return isinstance(other, Classref) and other.tag == self.tag and other.name == self.name
 
     def __hash__(self):
-        return multihash(self, 'tag', 'name')
+        return multihash(self.tag, self.name)
 
     @staticmethod
     def read_info(reader):
@@ -325,7 +325,7 @@ class Fieldref(Constant):
         return isinstance(other, Fieldref) and other.tag == self.tag and other.klass == self.klass and other.name_and_type == self.name_and_type
 
     def __hash__(self):
-        return multihash(self, 'tag', 'klass', 'name_and_type')
+        return multihash(self.tag, self.klass, self.name_and_type)
 
     def __info_eq__(self, other):
         return
@@ -397,7 +397,7 @@ class Methodref(Constant):
         return isinstance(other, Methodref) and other.tag == self.tag and other.klass == self.klass and other.name_and_type == self.name_and_type
 
     def __hash__(self):
-        return multihash(self, 'tag', 'klass', 'name_and_type')
+        return multihash(self.tag, self.klass, self.name_and_type)
 
     @staticmethod
     def read_info(reader):
@@ -458,7 +458,7 @@ class InterfaceMethodref(Constant):
         return isinstance(other, InterfaceMethodref) and other.tag == self.tag and other.klass == self.klass and other.name_and_type == self.name_and_type
 
     def __hash__(self):
-        return multihash(self, 'tag', 'klass', 'name_and_type')
+        return multihash(self.tag, self.klass, self.name_and_type)
 
     @staticmethod
     def read_info(reader):
@@ -508,7 +508,7 @@ class String(Constant):
         return isinstance(other, String) and other.tag == self.tag and other.value == self.value
 
     def __hash__(self):
-        return multihash(self, 'tag', 'value')
+        return multihash(self.tag, self.value)
 
     @staticmethod
     def read_info(reader):
@@ -555,7 +555,7 @@ class Integer(Constant):
         return isinstance(other, Integer) and other.tag == self.tag and other.value == self.value
 
     def __hash__(self):
-        return multihash(self, 'tag', 'value')
+        return multihash(self.tag, self.value)
 
     @staticmethod
     def read_info(reader):
@@ -612,7 +612,7 @@ class Float(Constant):
         return isinstance(other, Float) and other.tag == self.tag and other.value == self.value
 
     def __hash__(self):
-        return multihash(self, 'tag', 'value')
+        return multihash(self.tag, self.value)
 
     @staticmethod
     def read_info(reader):
@@ -668,7 +668,7 @@ class Long(Constant):
         return isinstance(other, Long) and other.tag == self.tag and other.value == self.value
 
     def __hash__(self):
-        return multihash(self, 'tag', 'value')
+        return multihash(self.tag, self.value)
 
     @staticmethod
     def read_info(reader):
@@ -731,7 +731,7 @@ class Double(Constant):
         return isinstance(other, Double) and other.tag == self.tag and other.value == self.value
 
     def __hash__(self):
-        return multihash(self, 'tag', 'value')
+        return multihash(self.tag, self.value)
 
     @staticmethod
     def read_info(reader):
@@ -782,7 +782,7 @@ class NameAndType(Constant):
         return isinstance(other, NameAndType) and other.tag == self.tag and other.name == self.name and other.descriptor == self.descriptor
 
     def __hash__(self):
-        return multihash(self, 'tag', 'name', 'descriptor')
+        return multihash(self.tag, self.name, self.descriptor)
 
     @staticmethod
     def read_info(reader):
@@ -962,7 +962,7 @@ class Utf8(Constant):
         return isinstance(other, Utf8) and other.tag == self.tag and other._bytes == self._bytes
 
     def __hash__(self):
-        return multihash(self, 'tag', '_bytes')
+        return multihash(self.tag, self._bytes)
 
     @property
     def length(self):
